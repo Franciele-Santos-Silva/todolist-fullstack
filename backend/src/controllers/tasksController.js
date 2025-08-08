@@ -1,4 +1,3 @@
-// salva as funcçoes de dentro do router
 const tasksModel = require('../models/tasksModel');
 
 const  getAll = async(req, res) => {
