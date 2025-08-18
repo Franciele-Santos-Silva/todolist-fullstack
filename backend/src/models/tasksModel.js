@@ -6,12 +6,14 @@ const getAll = async () => {
 };
 
 const createTask = async (task) => {
-    
-    const {title} = task;
+     const {title} = task;
+    const dateUTC = new Date(Date.now()).toUTCString();
 
     const query = ('INSET INTO tasks(title, status, created_at) VALUES(?,?,?)');
 
-    const createTask = await connection.execute(query, [title, 'pendente', 'created_at']);
+    const createTask = await connection.execute(query, [title, 'pendente', dateUTC ]);
+
+    return createTask;
 }
 
 module.exports = {
