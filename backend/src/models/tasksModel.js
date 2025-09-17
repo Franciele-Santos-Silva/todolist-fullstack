@@ -6,17 +6,23 @@ const getAll = async () => {
 };
 
 const createTask = async (task) => {
-     const {title} = task;
-    const dateUTC = new Date(Date.now()).toUTCString();
+    const { title } = task;
 
-    const query = ('INSERT INTO tasks(title, status, create_at) VALUES(?,?,?)');
+    const query = 'INSERT INTO tasks(title, status) VALUES(?, ?)';
+    const [result] = await connection.execute(query, [title, 'pendente']);
 
-    const createdTask = await connection.execute(query, [title, 'pendente', dateUTC ]);
-    return {insertId: createdTask.insertId};
-}
+    return {
+        id: result.insertId,
+        title,
+        status: 'pendente',
+        create_at: new Date().toISOString() 
+    };
+};
 
 module.exports = {
     getAll,
     createTask
-
 };
+
+
+
