@@ -6,6 +6,4 @@ const router = express.Router();
 router.get('/tasks', tasksController.getAll);
 router.post('/tasks', tasksController.createTask);
 
-
-
 module.exports = router;
