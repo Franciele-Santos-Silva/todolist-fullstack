@@ -14,11 +14,12 @@ const createTask = async (req, res) => {
 const deleteTask = async (req, res) => {
   const {id} = req.params;
 
-  await tasksModel.deletetasks(id);
+  await tasksModel.deleteTask(id);
   return res.status(204).json();
 };
 
 module.exports = {
   getAll,
-  createTask
+  createTask,
+  deleteTask,
 };
