@@ -16,7 +16,7 @@ const deleteTask = async (req, res) => {
   const deleted = await tasksModel.deleteTask(id);
 
   if (deleted === 0) {
-    return res.status(404).json({ message: 'Task not found' });
+    return res.status(404).json();
   }
 
   return res.status(204).send(); 
