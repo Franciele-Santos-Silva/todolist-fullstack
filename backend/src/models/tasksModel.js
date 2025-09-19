@@ -11,6 +11,7 @@ const createTask = async (task) => {
     const query = 'INSERT INTO tasks(title, status) VALUES(?, ?)';
     const [result] = await connection.execute(query, [title, 'pendente']);
 
+// ERRO DATA
     return {
         id: result.insertId,
         title,
@@ -24,8 +25,19 @@ const deleteTask = async (id) => {
     return result.affectedRows; 
 };
 
+const updateTask = async (id, task) => {
+    const {title, status} = task;
+
+    const query = 'UPDATE tasks SET title = ?, status = WHERE id = ?';
+    const [updatedTask] = await connection.execute(query, [title, status, id]);
+    
+    return updatedTask;
+
+};
+
 module.exports = {
     getAll,
     createTask,
     deleteTask,
+    updateTask,
 };
