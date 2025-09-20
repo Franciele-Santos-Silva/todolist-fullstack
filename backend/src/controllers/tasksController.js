@@ -26,7 +26,7 @@ const updatedTask = async (req, res) => {
   const { id } = req.params;
 
   await tasksModel.updateTask(id, req.body);
-  return res.status(204).json();
+  return res.status(204).send();
 };
 
 module.exports = {
