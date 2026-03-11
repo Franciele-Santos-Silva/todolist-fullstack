@@ -1,41 +1,58 @@
 import React, { useEffect, useState } from "react";
+import TaskRow from "./components/TaskRow";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
   const fetchTasks = async () => {
-    const res = await fetch(`${API_URL}/tasks`);
-    const data = await res.json();
-    setTasks(data);
+    try {
+      const res = await fetch(`${API_URL}/tasks`);
+      const data = await res.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Erro ao buscar tarefas:", error);
+    }
   };
 
   const addTask = async (e) => {
     e.preventDefault();
-    if (!newTask) return;
-    await fetch(`${API_URL}/tasks`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: newTask }),
-    });
-    setNewTask("");
-    fetchTasks();
+    if (!newTask.trim()) return;
+    try {
+      await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTask }),
+      });
+      setNewTask("");
+      fetchTasks();
+    } catch (error) {
+      console.error("Erro ao adicionar tarefa:", error);
+    }
   };
 
   const deleteTask = async (id) => {
-    await fetch(`${API_URL}/tasks/${id}`, { method: "DELETE" });
-    fetchTasks();
+    try {
+      await fetch(`${API_URL}/tasks/${id}`, { method: "DELETE" });
+      fetchTasks();
+    } catch (error) {
+      console.error("Erro ao excluir tarefa:", error);
+    }
   };
 
-  const updateTaskStatus = async (id, status) => {
-    await fetch(`${API_URL}/tasks/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    fetchTasks();
+  const updateTask = async (id, title, status) => {
+    try {
+      await fetch(`${API_URL}/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, status }),
+      });
+      fetchTasks();
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+    }
   };
 
   useEffect(() => {
@@ -45,45 +62,33 @@ const App = () => {
   return (
     <main>
       <h1 style={{ textAlign: "center" }}>Lista de Tarefas</h1>
-      <form onSubmit={addTask} style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
+      <form className="add-form" onSubmit={addTask}>
         <input
           type="text"
           placeholder="Adicionar tarefa"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          style={{ flex: 1, padding: "10px" }}
         />
-        <button type="submit" style={{ padding: "10px 20px" }}>Adicionar</button>
+        <button type="submit">+</button>
       </form>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table>
         <thead>
           <tr>
             <th>Tarefa</th>
+            <th>Data</th>
             <th>Status</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task) => (
-            <tr key={task.id}>
-              <td>{task.title}</td>
-              <td>
-                <select
-                  value={task.status}
-                  onChange={(e) => updateTaskStatus(task.id, e.target.value)}
-                >
-                  <option value="pendente">pendente</option>
-                  <option value="em andamento">em andamento</option>
-                  <option value="concluída">concluída</option>
-                </select>
-              </td>
-              <td>
-                <button onClick={() => deleteTask(task.id)} style={{ color: "red" }}>
-                  Delete
-                </button>
-              </td>
-            </tr>
+            <TaskRow
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
           ))}
         </tbody>
       </table>

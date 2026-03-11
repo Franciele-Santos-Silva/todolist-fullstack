@@ -14,12 +14,12 @@ export default function TaskRow({ task, deleteTask, updateTask }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!newTitle.trim()) return alert("O título não pode estar vazio!");
-    updateTask({ id, title: newTitle, status });
+    updateTask(id, newTitle, status);
     setEditing(false);
   };
 
   const handleStatusChange = (e) => {
-    updateTask({ ...task, status: e.target.value });
+    updateTask(id, title, e.target.value);
   };
 
   return (
@@ -41,15 +41,24 @@ export default function TaskRow({ task, deleteTask, updateTask }) {
         <select value={status} onChange={handleStatusChange}>
           <option value="pendente">pendente</option>
           <option value="em andamento">em andamento</option>
-          <option value="concluída">concluída</option>
+          <option value="concluida">concluída</option>
         </select>
       </td>
       <td>
         <button
           className="btn-action"
           onClick={() => setEditing(true)}
-        ></button>
-        <button className="btn-action" onClick={() => deleteTask(id)}></button>
+          title="Editar"
+        >
+          ✏️
+        </button>
+        <button
+          className="btn-action"
+          onClick={() => deleteTask(id)}
+          title="Excluir"
+        >
+          🗑️
+        </button>
       </td>
     </tr>
   );
