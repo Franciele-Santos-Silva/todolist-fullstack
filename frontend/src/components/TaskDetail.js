@@ -29,7 +29,7 @@ function TaskDetail() {
         ...tarefa,
         title: titulo,
         titulo: titulo,
-        descricao: descricao,
+        descricao: descricao || null,
         lista,
         data_vencimento: data,
         dataVencimento: data,
@@ -68,6 +68,7 @@ function TaskDetail() {
 
       <div>
         <label>Descrição:</label>
+        <br />
         <textarea
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}

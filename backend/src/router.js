@@ -11,11 +11,6 @@ const {
 router.get("/", tasksController.getAll);
 router.post("/", validateFieldTitle, tasksController.createTask);
 router.delete("/:id", tasksController.deleteTask);
-router.put(
-  "/:id",
-  validateFieldTitle,
-  validateFieldStatus,
-  tasksController.updateTask,
-);
+router.put("/:id", validateFieldTitle, tasksController.updateTask);
 
 module.exports = router;

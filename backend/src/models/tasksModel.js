@@ -55,13 +55,22 @@ const deleteTask = async (id) => {
 const updateTask = async (id, task) => {
   const {
     title,
+    titulo,
     descricao,
     concluida,
     lista,
     data_vencimento,
+    dataVencimento,
     etiquetas,
     subtarefas,
   } = task;
+
+  if (titulo !== undefined) {
+    task.title = titulo;
+  }
+  if (dataVencimento !== undefined) {
+    task.data_vencimento = dataVencimento;
+  }
 
   const status =
     concluida !== undefined
@@ -77,19 +86,18 @@ const updateTask = async (id, task) => {
     setClause += ", title = ?";
     values.unshift(title);
   }
-  if (
-    descricao !== undefined &&
-    descricao !== null &&
-    descricao.trim() !== ""
-  ) {
+  if (descricao !== undefined) {
     setClause += ", descricao = ?";
-    values.unshift(descricao);
-  } else {
-    setClause += ", descricao = NULL";
+    values.unshift(descricao || null);
   }
   if (status !== undefined) {
     setClause += ", status = ?";
     values.unshift(status);
+  }
+  if (concluida !== undefined) {
+    const newStatus = concluida ? "concluida" : "pendente";
+    setClause += ", status = ?";
+    values.unshift(newStatus);
   }
   if (lista !== undefined) {
     setClause += ", lista = ?";
