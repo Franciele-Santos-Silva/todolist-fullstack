@@ -63,7 +63,7 @@ export const TaskProvider = ({ children }) => {
     } catch (err) {
       console.error(err);
     }
-  }, []);
+  }, [tarefaSelecionada]);
 
   const excluirTarefa = useCallback(
     async (id) => {
