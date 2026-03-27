@@ -1,5 +1,5 @@
-import React from 'react';
-import useTasks from '../hooks/useTasks';
+import React from "react";
+import useTasks from "../hooks/useTasks";
 
 function TaskItem({ tarefa, selecionada }) {
   const { setTarefaSelecionada, atualizarTarefa } = useTasks();
@@ -9,10 +9,21 @@ function TaskItem({ tarefa, selecionada }) {
   };
 
   return (
-    <li className={`task-item ${tarefa.concluida ? 'completed' : ''} ${selecionada ? 'selected' : ''}`}>
-      <input type="checkbox" checked={tarefa.concluida} onChange={toggleConcluida} />
-      <span className="task-title" onClick={() => setTarefaSelecionada(tarefa)}>{tarefa.titulo}</span>
-      <button className="task-arrow" onClick={() => setTarefaSelecionada(tarefa)}></button>
+    <li
+      className={`task-item ${tarefa.concluida ? "completed" : ""} ${selecionada ? "selected" : ""}`}
+    >
+      <input
+        type="checkbox"
+        checked={tarefa.concluida}
+        onChange={toggleConcluida}
+      />
+      <span className="task-title" onClick={() => setTarefaSelecionada(tarefa)}>
+        {tarefa.title || tarefa.titulo || "Sem título"}
+      </span>
+      <button
+        className="task-arrow"
+        onClick={() => setTarefaSelecionada(tarefa)}
+      ></button>
     </li>
   );
 }

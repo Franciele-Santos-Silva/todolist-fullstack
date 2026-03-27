@@ -15,10 +15,10 @@ function TaskDetail() {
 
   useEffect(() => {
     if (tarefa) {
-      setTitulo(tarefa.titulo);
-      setDescricao(tarefa.descricao);
-      setLista(tarefa.lista);
-      setData(tarefa.dataVencimento || "");
+      setTitulo(tarefa.title || tarefa.titulo || "");
+      setDescricao(tarefa.descricao || "");
+      setLista(tarefa.lista || "Pessoal");
+      setData(tarefa.data_vencimento || tarefa.dataVencimento || "");
       setSubtarefas(tarefa.subtarefas || []);
     }
   }, [tarefa]);
@@ -27,9 +27,11 @@ function TaskDetail() {
     if (tarefa) {
       atualizarTarefa({
         ...tarefa,
-        titulo,
-        descricao,
+        title: titulo,
+        titulo: titulo,
+        descricao: descricao,
         lista,
+        data_vencimento: data,
         dataVencimento: data,
         subtarefas,
       });
@@ -60,7 +62,9 @@ function TaskDetail() {
   return (
     <aside className="task-detail">
       <h3>Tarefa:</h3>
-      <p className="detail-title">{titulo}</p>
+      <p className="detail-title">
+        {tarefa.title || tarefa.titulo || "Sem título"}
+      </p>
 
       <div>
         <label>Descrição:</label>

@@ -1,0 +1,49 @@
+# FIXES COMPLETOS - TodoList Fullstack
+
+## Problemas Originais Resolvidos
+1. **Salvar tarefa frontend não funcionava** (Insomnia sim): Backend model/DB só aceitava `title/status`. Frontend enviava `titulo/descricao/concluida/lista/etc`.
+2. **TaskDetail não aparecia**: Falha API → catch silenciosa → no state update/selection.
+
+## Mudanças Backend
+1. **database/init.sql**: Tabela tasks expandida:
+   ```
+   title, descricao TEXT, status ENUM, lista VARCHAR, data_vencimento DATE, etiquetas JSON, subtarefas JSON, created_at
+   ```
+2. **tasksModel.js**: 
+   - createTask: Map `titulo`→`title`, `concluida`→`status`, INSERT todos campos, return SELECT *
+   - updateTask: Dynamic UPDATE, return full task
+3. **tasksMiddleware.js**: 
+   - `FieldtTitle` → `FieldTitle`
+   - Support `body.titulo || body.title`
+   - Msg status corrigida
+4. **router.js/controller.js**: Naming consistent (`updateTask`), middleware calls fixed.
+
+## Frontend (já funcionava, agora compatível)
+- api.js: `VITE_API_URL || localhost:3333` → POST `titulo` OK
+- TaskContext.js: adicionarTarefa → API → setTarefaSelecionada (auto detail)
+- TaskItem.js: Click → select → detail shows
+- Layout flex: Sidebar | List | Detail
+
+## Como Rodar
+**Docker (recomendado):**
+```
+docker-compose up --build
+```
+- DB:3307, Backend:3333, Frontend:5173
+
+**Local:**
+```
+cd backend && npm run dev  # 3333
+cd frontend && npm start   # 3000 CRA
+```
+
+## Teste
+1. localhost:3000
+2. Add task → list + **detail direita aparece** (descrição, save, delete)
+3. Edit → save → persiste
+4. F12 Network → POST 201 success
+
+## Unused Files (tabs, safe delete)
+- frontend/src/{App.jsx, main.jsx, vite.config.js, TaskRow.jsx, TaskContex.jsx, TestBackend.js}
+
+**Tudo conectado/completando. Projeto pronto!**

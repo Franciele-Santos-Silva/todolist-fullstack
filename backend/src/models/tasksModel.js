@@ -1,41 +1,130 @@
-const connection = require('./connection');
+// src/models/tasksModel.js
+const connection = require("./connection");
 
 const getAll = async () => {
-    const [tasks] = await connection.execute('SELECT * FROM tasks');
-    return tasks;
+  const [tasks] = await connection.execute("SELECT * FROM tasks");
+  return tasks;
 };
 
 const createTask = async (task) => {
-    const { title } = task;
+  // Mapear campos do frontend para DB
+  const {
+    title,
+    descricao = null,
+    concluida = false,
+    lista = "Pessoal",
+    data_vencimento = null,
+    etiquetas = [],
+    subtarefas = [],
+  } = task;
 
-    const query = 'INSERT INTO tasks(title, status) VALUES(?, ?)';
-    const [result] = await connection.execute(query, [title, 'pendente']);
+  const status = concluida ? "concluida" : "pendente";
 
-    return {
-        id: result.insertId,
-        title,
-        status: 'pendente',
-        create_at: new Date().toISOString() 
-    };
+  const query = `
+    INSERT INTO tasks 
+      (title, descricao, status, lista, data_vencimento, etiquetas, subtarefas) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [
+    title,
+    descricao,
+    status,
+    lista,
+    data_vencimento,
+    JSON.stringify(etiquetas),
+    JSON.stringify(subtarefas),
+  ];
+
+  const [result] = await connection.execute(query, values);
+
+  // Retornar a tarefa criada
+  const [createdTasks] = await connection.execute(
+    "SELECT * FROM tasks WHERE id = ?",
+    [result.insertId],
+  );
+  return createdTasks[0];
 };
 
 const deleteTask = async (id) => {
-    const [result] = await connection.execute('DELETE FROM tasks WHERE id = ?', [id]);
-    return result.affectedRows; 
+  const [result] = await connection.execute("DELETE FROM tasks WHERE id = ?", [
+    id,
+  ]);
+  return result.affectedRows;
 };
 
 const updateTask = async (id, task) => {
-    const {title, status} = task;
+  const {
+    title,
+    descricao,
+    concluida,
+    lista,
+    data_vencimento,
+    etiquetas,
+    subtarefas,
+  } = task;
 
-    const query = 'UPDATE tasks SET title = ?, status = ? WHERE id = ?';
-    const [updatedTask] = await connection.execute(query, [title, status, id]);
-    
-    return updatedTask;
+  const status =
+    concluida !== undefined
+      ? concluida
+        ? "concluida"
+        : "pendente"
+      : undefined;
+
+  let setClause = "updated_at = CURRENT_TIMESTAMP";
+  const values = [id];
+
+  if (title !== undefined) {
+    setClause += ", title = ?";
+    values.unshift(title);
+  }
+  if (
+    descricao !== undefined &&
+    descricao !== null &&
+    descricao.trim() !== ""
+  ) {
+    setClause += ", descricao = ?";
+    values.unshift(descricao);
+  } else {
+    setClause += ", descricao = NULL";
+  }
+  if (status !== undefined) {
+    setClause += ", status = ?";
+    values.unshift(status);
+  }
+  if (lista !== undefined) {
+    setClause += ", lista = ?";
+    values.unshift(lista);
+  }
+  if (data_vencimento !== undefined) {
+    setClause += ", data_vencimento = ?";
+    values.unshift(data_vencimento);
+  }
+  if (etiquetas !== undefined) {
+    setClause += ", etiquetas = ?";
+    values.unshift(JSON.stringify(etiquetas));
+  }
+  if (subtarefas !== undefined) {
+    setClause += ", subtarefas = ?";
+    values.unshift(JSON.stringify(subtarefas));
+  }
+
+  const query = `UPDATE tasks SET ${setClause} WHERE id = ?`;
+  const [result] = await connection.execute(query, values);
+
+  if (result.affectedRows === 0) {
+    throw new Error("Task not found");
+  }
+
+  const [updatedTasks] = await connection.execute(
+    "SELECT * FROM tasks WHERE id = ?",
+    [id],
+  );
+  return updatedTasks[0];
 };
 
 module.exports = {
-    getAll,
-    createTask,
-    deleteTask,
-    updateTask,
+  getAll,
+  createTask,
+  deleteTask,
+  updateTask,
 };
