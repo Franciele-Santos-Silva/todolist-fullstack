@@ -30,7 +30,7 @@ export const TaskProvider = ({ children }) => {
     if (!titulo || !titulo.trim()) return;
 
     const novaTarefa = {
-      titulo,
+      title,
       descricao: "",
       concluida: false,
       lista: "Pessoal",
@@ -48,22 +48,25 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  const atualizarTarefa = useCallback(async (tarefaAtualizada) => {
-    try {
-      const atualizada = await updateTask(
-        tarefaAtualizada.id,
-        tarefaAtualizada,
-      );
-      if (tarefaSelecionada && tarefaSelecionada.id === atualizada.id) {
-        setTarefaSelecionada(atualizada);
+  const atualizarTarefa = useCallback(
+    async (tarefaAtualizada) => {
+      try {
+        const atualizada = await updateTask(
+          tarefaAtualizada.id,
+          tarefaAtualizada,
+        );
+        if (tarefaSelecionada && tarefaSelecionada.id === atualizada.id) {
+          setTarefaSelecionada(atualizada);
+        }
+        setTarefas((prev) =>
+          prev.map((t) => (t.id === atualizada.id ? atualizada : t)),
+        );
+      } catch (err) {
+        console.error(err);
       }
-      setTarefas((prev) =>
-        prev.map((t) => (t.id === atualizada.id ? atualizada : t)),
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  }, [tarefaSelecionada]);
+    },
+    [tarefaSelecionada],
+  );
 
   const excluirTarefa = useCallback(
     async (id) => {

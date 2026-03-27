@@ -1,4 +1,5 @@
 // src/models/tasksModel.js
+
 const connection = require("./connection");
 
 const getAll = async () => {
@@ -7,7 +8,6 @@ const getAll = async () => {
 };
 
 const createTask = async (task) => {
-  // Mapear campos do frontend para DB
   const {
     title,
     descricao = null,
@@ -18,6 +18,10 @@ const createTask = async (task) => {
     subtarefas = [],
   } = task;
 
+  if (title === undefined || title === null || String(title).trim() === "") {
+    throw new Error("Title is required");
+  }
+
   const status = concluida ? "concluida" : "pendente";
 
   const query = `
@@ -27,17 +31,16 @@ const createTask = async (task) => {
   `;
   const values = [
     title,
-    descricao,
+    descricao ?? null,
     status,
-    lista,
-    data_vencimento,
-    JSON.stringify(etiquetas),
-    JSON.stringify(subtarefas),
+    lista ?? null,
+    data_vencimento ?? null,
+    JSON.stringify(etiquetas ?? []),
+    JSON.stringify(subtarefas ?? []),
   ];
 
   const [result] = await connection.execute(query, values);
 
-  // Retornar a tarefa criada
   const [createdTasks] = await connection.execute(
     "SELECT * FROM tasks WHERE id = ?",
     [result.insertId],
@@ -65,12 +68,8 @@ const updateTask = async (id, task) => {
     subtarefas,
   } = task;
 
-  if (titulo !== undefined) {
-    task.title = titulo;
-  }
-  if (dataVencimento !== undefined) {
-    task.data_vencimento = dataVencimento;
-  }
+  if (titulo !== undefined) task.title = titulo;
+  if (dataVencimento !== undefined) task.data_vencimento = dataVencimento;
 
   const status =
     concluida !== undefined
@@ -88,7 +87,7 @@ const updateTask = async (id, task) => {
   }
   if (descricao !== undefined) {
     setClause += ", descricao = ?";
-    values.unshift(descricao || null);
+    values.unshift(descricao ?? null);
   }
   if (status !== undefined) {
     setClause += ", status = ?";
@@ -105,15 +104,15 @@ const updateTask = async (id, task) => {
   }
   if (data_vencimento !== undefined) {
     setClause += ", data_vencimento = ?";
-    values.unshift(data_vencimento);
+    values.unshift(data_vencimento ?? null);
   }
   if (etiquetas !== undefined) {
     setClause += ", etiquetas = ?";
-    values.unshift(JSON.stringify(etiquetas));
+    values.unshift(JSON.stringify(etiquetas ?? []));
   }
   if (subtarefas !== undefined) {
     setClause += ", subtarefas = ?";
-    values.unshift(JSON.stringify(subtarefas));
+    values.unshift(JSON.stringify(subtarefas ?? []));
   }
 
   const query = `UPDATE tasks SET ${setClause} WHERE id = ?`;
