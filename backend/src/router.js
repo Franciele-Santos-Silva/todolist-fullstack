@@ -7,7 +7,6 @@ const {
   validateFieldStatus,
 } = require("./middlewares/tasksMiddleware");
 
-// REMOVA /tasks daqui
 router.get("/", tasksController.getAll);
 router.post("/", validateFieldTitle, tasksController.createTask);
 router.delete("/:id", tasksController.deleteTask);

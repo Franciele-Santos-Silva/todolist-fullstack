@@ -11,9 +11,4 @@ CREATE TABLE IF NOT EXISTS tasks(
     subtarefas JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
--- For existing DBs, run these ALTERs:
--- ALTER TABLE tasks ADD COLUMN descricao TEXT AFTER title;
--- ALTER TABLE tasks ADD COLUMN lista VARCHAR(100) DEFAULT 'Pessoal' AFTER status;
--- ALTER TABLE tasks ADD COLUMN data_vencimento DATE AFTER lista;
--- ALTER TABLE tasks ADD COLUMN etiquetas JSON AFTER data_vencimento;
--- ALTER TABLE tasks ADD COsiow,LUMN subtarefas JSON AFTER etiquetas;
+

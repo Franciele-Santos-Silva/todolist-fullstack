@@ -19,19 +19,17 @@ export const TaskProvider = ({ children }) => {
   const [tarefas, setTarefas] = useState([]);
   const [tarefaSelecionada, setTarefaSelecionada] = useState(null);
 
-  // Buscar tarefas do backend ao iniciar
   useEffect(() => {
     getTasks()
       .then(setTarefas)
       .catch((err) => console.error(err));
   }, []);
 
-  // Adicionar nova tarefa
   const adicionarTarefa = useCallback(async (titulo) => {
     if (!titulo || !titulo.trim()) return;
 
     const novaTarefa = {
-      title: titulo, // ✅ corrigido
+      title: titulo,
       descricao: "",
       concluida: false,
       lista: "Pessoal",
@@ -49,13 +47,12 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  // Atualizar tarefa existente
   const atualizarTarefa = useCallback(
     async (tarefaAtualizada) => {
       try {
         const atualizada = await updateTask(
           tarefaAtualizada.id,
-          tarefaAtualizada
+          tarefaAtualizada,
         );
 
         if (tarefaSelecionada && tarefaSelecionada.id === atualizada.id) {
@@ -63,16 +60,15 @@ export const TaskProvider = ({ children }) => {
         }
 
         setTarefas((prev) =>
-          prev.map((t) => (t.id === atualizada.id ? atualizada : t))
+          prev.map((t) => (t.id === atualizada.id ? atualizada : t)),
         );
       } catch (err) {
         console.error(err);
       }
     },
-    [tarefaSelecionada]
+    [tarefaSelecionada],
   );
 
-  // Excluir tarefa
   const excluirTarefa = useCallback(
     async (id) => {
       try {
@@ -83,7 +79,7 @@ export const TaskProvider = ({ children }) => {
         console.error(err);
       }
     },
-    [tarefaSelecionada?.id]
+    [tarefaSelecionada?.id],
   );
 
   const value = {

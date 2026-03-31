@@ -1,5 +1,3 @@
-// src/models/tasksModel.js
-
 const connection = require("./connection");
 
 const getAll = async () => {

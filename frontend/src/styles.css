@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
   margin: 0;
   padding: 0;
@@ -21,7 +20,6 @@ body, html {
   background: white;
 }
 
-/* Sidebar */
 .sidebar {
   width: 250px;
   background: #f0f1f5;
@@ -96,7 +94,6 @@ body, html {
   font-weight: 600;
 }
 
-/* Tags */
 .tags-section .tags {
   display: flex;
   gap: 8px;
@@ -133,7 +130,6 @@ body, html {
   user-select: none;
 }
 
-/* Bottom buttons */
 .bottom-links {
   margin-top: auto;
   display: flex;
@@ -160,7 +156,6 @@ body, html {
   color: #2a2ab8;
 }
 
-/* Main content */
 .tasks-main {
   flex: 1.5;
   padding: 25px 20px;
@@ -203,8 +198,6 @@ body, html {
   transition: background 0.3s ease;
 }
 
-/* ============================== */
-
 .add-task {
   display: flex;
   gap: 6px;
@@ -228,8 +221,6 @@ body, html {
   color: white;
   opacity: 1;
 }
-
-/* ================================ */
 
 .add-task-btn:hover{
   background: #5f5fdd;
@@ -295,7 +286,6 @@ body, html {
   user-select: none;
 }
 
-/* Painel detalhes */
 .task-detail {
   width: 320px;
   padding: 20px;
@@ -426,7 +416,6 @@ body, html {
   background: #5f5fdd;
 }
 
-/* Scroll styling */
 .tasks-list::-webkit-scrollbar,
 .task-detail::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar {
