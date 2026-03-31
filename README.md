@@ -1,190 +1,103 @@
-# 🚀 TodoList Fullstack
+# TodoList Fullstack
 
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com) [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev) [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org) [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+Este é um aplicativo Todo List fullstack construído com tecnologias web modernas:
 
-## 📋 Visão Geral
+**Frontend**: React + Vite + Tailwind CSS (inferido da estrutura de componentes)
+**Backend**: Node.js + Express.js
+**Banco de Dados**: MySQL/PostgreSQL (via init.sql e models)
+**Containerização**: Docker + Docker Compose
+**Deploy**: Pronto para desenvolvimento local e deployment containerizado
 
-**TodoList Fullstack** é um projeto completo e containerizado para gerenciamento de tarefas com operações CRUD, validações e interface intuitiva.
+Principais funcionalidades:
+- Criar, ler, atualizar, deletar (CRUD) tarefas
+- Listagem de tarefas e visualização de detalhes
+- Navegação por sidebar
+- Interface responsiva
 
-**Arquitetura:**
-- **Frontend**: React + Vite (SPA moderna)
-- **Backend**: Node.js/Express (API REST)
-- **Banco**: MySQL (containerizado)
-- **Infra**: Docker + Docker Compose
+## Pré-requisitos
 
-[![Arquitetura](https://via.placeholder.com/800x200/0f0f0f/ffffff?text=TodoList+Fullstack+Architecture)](https://github.com/)
+- Node.js (v18+)
+- Docker & Docker Compose
+- Yarn ou npm
+- Cliente MySQL (opcional, para DB local)
 
-## 🛠️ Stack Tecnológico
+## Início Rápido (Docker - Recomendado)
+
+1. Clone o repositório (se ainda não fez):
+   ```bash
+   git clone <repo-url>
+   cd todolist-fullstack
+   ```
+
+2. Inicie a stack:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. Abra no navegador: [http://localhost:5173](http://localhost:5173) (ou porta especificada no docker-compose.yml)
+
+4. Pare: `docker-compose down`
+
+## Desenvolvimento Local
 
 ### Backend
-```json
-{
-  "express": "^5.1.0",
-  "mysql2": "^3.14.3", 
-  "dotenv": "^17.2.1",
-  "nodemon": "^3.1.10"
-}
-```
-
-### Frontend  
-```json
-{
-  "react": "^18.0.0",
-  "vite": "^latest",
-  "axios": "^latest"
-}
-```
-
-### Infra
-- Docker, Docker Compose
-- MySQL 8+
-
-## 📁 Estrutura de Arquivos
-
-```
-todolist-fullstack/
-├── backend/                 # API Node.js/Express (porta 3333)
-│   ├── src/
-│   │   ├── server.js      # Server entrypoint
-│   │   ├── app.js         # Express config
-│   │   ├── router.js      # API routes
-│   │   ├── controllers/tasksController.js
-│   │   ├── middlewares/tasksMiddleware.js
-│   │   └── models/
-│   │       ├── connection.js  # MySQL pool
-│   │       └── tasksModel.js
-│   ├── Dockerfile
-│   └── package.json
-├── frontend/               # React/Vite SPA (porta 5173)
-│   ├── src/
-│   │   ├── App.js
-│   │   ├── api.js         # HTTP client
-│   │   ├── contexts/TaskContext.js
-│   │   ├── hooks/useTasks.js
-│   │   ├── components/
-│   │   │   ├── Sidebar.js
-│   │   │   ├── TaskList.js
-│   │   │   ├── TaskItem.js
-│   │   │   └── TaskDetail.js
-│   │   └── utils/taskUtils.js
-│   ├── Dockerfile
-│   └── vite.config.js
-├── database/
-│   └── init.sql          # Schema tasks
-├── docker-compose.yml    # Orquestra tudo
-└── README.md             # 👈 Você está aqui!
-```
-
-## ✨ Funcionalidades
-
-<details>
-<summary>🔹 Backend API (localhost:3333)</summary>
-
-| Método | Endpoint     | Descrição | Body Example |
-|--------|--------------|-----------|--------------|
-| `GET`  | `/tasks`     | Listar tarefas | - |
-| `POST` | `/tasks`     | Criar tarefa | `{"title": "Nova tarefa"}` |
-| `PUT`  | `/tasks/:id` | Atualizar | `{"title": "...", "status": "concluída"}` |
-| `DELETE` | `/tasks/:id` | Deletar | - |
-
-**Status:** `pendente` | `em andamento` | `concluída`
-
-**Validações:** Title obrigatório, status válido.
-
-**Teste rápido:**
 ```bash
-curl -X POST http://localhost:3333/tasks -H "Content-Type: application/json" -d '{"title":"Teste"}'
+cd backend
+npm install
+npm run dev 
 ```
 
-</details>
+### Banco de Dados
+- Usa DB dockerizado (veja docker-compose.yml)
+- Ou manualmente: Execute `database/init.sql` na sua instância MySQL/PostgreSQL
 
-<details>
-<summary>🎨 Frontend Features</summary>
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- ✅ CRUD completo de tarefas
-- ✅ Filtros por status
-- ✅ Detalhes de tarefa
-- ✅ Sidebar navegação
-- ✅ Context API + custom hooks
-- ✅ Design responsivo
+**Proxy**: Chamadas API do frontend proxy para backend (ver vite.config.js).
 
-</details>
+## Endpoints da API
 
-## ⚙️ Setup Rápido
+URL Base: `http://localhost:3000/api` (backend)
 
-### 🐳 Docker (Recomendado)
+| Método | Endpoint       | Descrição              |
+|--------|----------------|------------------------|
+| GET    | /tasks         | Listar todas tarefas   |
+| POST   | /tasks         | Criar tarefa           |
+| GET    | /tasks/:id     | Detalhes da tarefa     |
+| PUT    | /tasks/:id     | Atualizar tarefa       |
+| DELETE | /tasks/:id     | Deletar tarefa         |
 
-1. **Copie .env (backend):**
-   ```bash
-   cp backend/.env.example backend/.env
-   # Edite MYSQL_PASSWORD=root (padrão)
-   ```
+Veja `backend/src/controllers/tasksController.js` para detalhes.
 
-2. **Execute:**
-   ```bash
-   docker-compose up --build -d
-   ```
+## Scripts
 
-3. **Acesse:**
-   - **Frontend:** [http://localhost:5173](http://localhost:5173)
-   - **API:** [http://localhost:3333/tasks](http://localhost:3333/tasks)
-   - **DB:** `mysql -h localhost -P 3306 -u root -proot todolist`
+**Backend** (`backend/package.json`):
+- `npm run dev` - Servidor de desenvolvimento
+- `npm run build` - Build de produção
+- `npm start` - Servidor de produção
 
-### 💻 Local (sem Docker)
+**Frontend** (`frontend/package.json`):
+- `npm run dev` - Servidor Vite dev
+- `npm run build` - Build de produção
+- `npm run preview` - Preview do build de produção
+
+## Comandos Docker
 
 ```bash
-# Backend
-cd backend && npm i && npm run dev
 
-# Frontend (novo terminal)
-cd frontend && npm i && npm run dev
+docker-compose up --build
+
+# Rodar em background
+docker-compose up -d
+
+# Logs
+docker-compose logs -f
+
+# Rebuild
+docker-compose down && docker-compose up --build
 ```
-
-**Dica:** Configure `VITE_API_URL=http://localhost:3333` no frontend.
-
-## 🗄️ Banco de Dados
-
-**Schema** (`database/init.sql`):
-```sql
-CREATE TABLE tasks (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  status VARCHAR(50) DEFAULT 'pendente',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-## 🐳 Docker Compose Services
-
-```yaml
-services:
-  frontend:  # Vite dev server (5173)
-  backend:   # Node.js API (3333)  
-  mysql:     # Banco (3306)
-```
-
-## ✅ Status do Projeto
-
-| Componente | Status |
-|------------|--------|
-| Docker | ✅ Completo |
-| API CRUD | ✅ Testada |
-| Frontend | ✅ Conectado |
-| Validações | ✅ Implementadas |
-| Documentação | ✅ Otimizada |
-
-## 🚀 Próximas Melhorias
-
-- [ ] Autenticação JWT
-- [ ] Paginação + Busca
-- [ ] Upload anexos
-- [ ] WebSockets (notificações)
-- [ ] Testes (Jest/Cypress)
-- [ ] CI/CD (GitHub Actions)
-- [ ] Deploy (Railway/Vercel)
-
----
-
-**👨‍💻 Desenvolvido com ❤️ | [Contribua!](https://github.com/)**  
-**📅 Última atualização:** Automatizada via BLACKBOXAI
-
