@@ -1,8 +1,8 @@
-# Esperar 15 segundos para os containers subirem
+# Espera inicial para garantir que os containers subam
 echo "Aguardando containers subirem..."
-sleep 15
+sleep 30   # aumenta para backend e banco iniciarem
 
-# Verificar backend
+# Testar Backend
 echo "Testando backend..."
 HTTP_CODE_BACKEND=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/tasks)
 if [ "$HTTP_CODE_BACKEND" -ne 200 ]; then
@@ -11,7 +11,7 @@ if [ "$HTTP_CODE_BACKEND" -ne 200 ]; then
 fi
 echo "Backend OK."
 
-# Verificar banco de dados (MySQL/PostgreSQL) via container
+# Testar Banco de Dados
 echo "Verificando banco de dados..."
 DB_CONTAINER=$(docker ps --filter "name=db" --format "{{.Names}}")
 if [ -z "$DB_CONTAINER" ]; then
@@ -20,7 +20,7 @@ if [ -z "$DB_CONTAINER" ]; then
 fi
 echo "Banco de dados OK. Container: $DB_CONTAINER"
 
-# Verificar frontend
+# Testar Frontend
 echo "Testando frontend..."
 HTTP_CODE_FRONTEND=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5173)
 if [ "$HTTP_CODE_FRONTEND" -ne 200 ]; then
