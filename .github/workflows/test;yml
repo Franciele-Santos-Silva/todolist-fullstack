@@ -1,0 +1,27 @@
+name: Teste TodoList Fullstack
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v3
+
+    - name: Instalar Docker Compose
+      run: sudo apt-get update && sudo apt-get install -y docker-compose
+
+    - name: Subir containers
+      run: docker-compose up -d --build
+
+    - name: Rodar testes automatizados
+      run: bash test.sh
+
+    - name: Parar containers
+      run: docker-compose down
